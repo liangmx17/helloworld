@@ -24,7 +24,13 @@
       {
         "command": "helloworld.start-writing",
         "title": "Write!"
+      },
+      {
+        "command": "helloworld.wordCount",
+        "title": "wordCount"
       }
+
+      
     ],
 
     "viewsContainers": {
@@ -60,7 +66,17 @@
 
       }
       
-    ]
+    ],
+
+  "menus": {
+      "editor/context": [
+          {
+              "when": "editorFocus",
+              "command": "helloworld.currentTime",
+              "group": "navigation"
+          }
+      ]
+  }
 
 
   },
