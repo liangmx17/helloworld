@@ -3,23 +3,64 @@
 import * as vscode from 'vscode';
 import * as fs from 'fs';
 
-const root_path = "/Users/liangmx17/Documents/vscode-extension/";
+const root_path = "/Users/liangmx17/Documents/vscode-extension/helloworld/";
 
-// This method is called when your extension is activated
-// Your extension is activated the very first time the command is executed
-// 校验文件结构，没有的话就创建这些
-//	
+function check_path(path:string):boolean{
+	if (fs.existsSync(path)) {
+		console.log(`${path}已存在`);
+		return true;
+	} else {
+		console.log(`${path}不存在，开始创建`);
+		//	这里的function（err）是一个call back，居然可以这么写，神奇
+		fs.mkdir(root_path+".a", function (err) {
+			if (err) {
+		   		console.log(err);
+		   		vscode.window.showErrorMessage(`${path}创建失败!`);
+		   		return false;
+		 	}
+		 	console.log(`${path}创建成功!`);
+	   		}); 
+		//	创建文件，失败则返回false
+		return true;
+	}
+}
+
+function check_file(path:string, filename:string):boolean{
+	let fd=0;
+	if(fs.existsSync(path+filename)){
+		console.log(`${filename}已存在于${path+filename}`);
+		return true;
+	} else {
+		console.log(`${filename}不存在，开始创建于${path+filename}`);
+		fs.open(path+filename,'w',function(err,fd) {
+			if (err) {
+				console.error(err);
+				return false;
+			}
+		   console.log("文件创建成功！"); 
+		});
+
+		fs.close(fd,function(err){
+			if (err){
+			   console.log(err);
+			} 
+			console.log("文件关闭成功");
+		 });
+		 return true;
+	}
+}
 function check_structure() {
-	fs.mkdir(root_path+".a", function (err) {
-	 if (err) {
-		console.log(err);
-		vscode.window.showErrorMessage("Failed!");
-		return;
-	  }
-	  console.log("success...");//success
-	}); 
-    // 函数定义
-    console.log("调用函数");
+	const	info_path = '.a/';
+	const character = 'character.md';
+	const plot = 'plot.md';
+	const other = 'other.md';
+	const scene = 'scene.md';
+
+	check_path(root_path+info_path);
+	check_file(root_path+info_path,character);
+	check_file(root_path+info_path,plot);
+	check_file(root_path+info_path,other);
+	check_file(root_path+info_path,scene);
 };
 
 function get_time(){
@@ -39,12 +80,12 @@ export function activate(context: vscode.ExtensionContext) {
 
 	// Use the console to output diagnostic information (console.log) and errors (console.error)
 	// This line of code will only be executed once when your extension is activated
-	console.log('Congratulations, your extension "helloworld" is now active!');
+	console.log('Congratulations, your extension "novel" is now active!');
 	console.log(get_time());
 
 	const wordCounter = new WordCounter();
 
-    let disposable2 = vscode.commands.registerCommand('helloworld.wordCount', () => {
+    let disposable2 = vscode.commands.registerCommand('novel.wordCount', () => {
         const count = wordCounter.updateWordCount();
         if (count && count >= 0) {
             vscode.window.showInformationMessage(`字数：${count}`);
@@ -56,15 +97,15 @@ export function activate(context: vscode.ExtensionContext) {
 	// Now provide the implementation of the command with registerCommand
 	// The commandId parameter must match the command field in package.json
 	
-	let disposable = vscode.commands.registerCommand('helloworld.ohmygosh', () => {
-		vscode.window.showInformationMessage('Oh my gosh from helloworld!');
+	let disposable = vscode.commands.registerCommand('novel.ohmygosh', () => {
+		vscode.window.showInformationMessage('Oh my gosh from novel!');
 	});	
 
-	let currentTime = vscode.commands.registerCommand('helloworld.currentTime', () => {
+	let currentTime = vscode.commands.registerCommand('novel.currentTime', () => {
 		vscode.window.showInformationMessage(get_time());
 	});
 	
-	let start_writing = vscode.commands.registerCommand('helloworld.start-writing', () => {
+	let start_writing = vscode.commands.registerCommand('novel.start-writing', () => {
 		check_structure();
 		vscode.window.showInformationMessage('Check your file');
 	});	
@@ -78,6 +119,7 @@ export function activate(context: vscode.ExtensionContext) {
 class WordCounter {
     // VSCode 底部状态栏
     private _statusBarItem: vscode.StatusBarItem = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Left);
+    private _progressBarItem: vscode.StatusBarItem = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Left);
     // 释放队列
     private _disposable: vscode.Disposable;
     // subscribe event
@@ -106,6 +148,16 @@ class WordCounter {
         const wordCount = this._getWordCount(doc);
         this._statusBarItem.text = `${wordCount} 字`;
         this._statusBarItem.show();
+
+		//	进度判断
+		if (doc.languageId === 'markdown') {
+            const progress = wordCount/40;
+            this._progressBarItem.text = `${progress}%`;
+            this._progressBarItem.show();
+            return wordCount;
+        } else {
+            this._progressBarItem.hide();
+        }
         return wordCount;
     }
     // 统计函数

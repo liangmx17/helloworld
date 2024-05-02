@@ -1,6 +1,6 @@
 {
-  "name": "helloworld",
-  "displayName": "helloworld",
+  "name": "novel",
+  "displayName": "novel",
   "description": "",
   "version": "0.0.1",
   "engines": {
@@ -14,19 +14,35 @@
   "contributes": {
     "commands": [
       {
-        "command": "helloworld.ohmygosh",
+        "command": "novel.new_character",
+        "title": "New Character"
+      },
+      {
+        "command": "novel.new_plot",
+        "title": "New Plot"
+      },
+      {
+        "command": "novel.new_scene",
+        "title": "New Scene"
+      },
+      {
+        "command": "novel.new_other",
+        "title": "New Other"
+      },
+      {
+        "command": "novel.ohmygosh",
         "title": "ohmygosh"
       },
       {
-        "command": "helloworld.currentTime",
+        "command": "novel.currentTime",
         "title": "Time"
       },
       {
-        "command": "helloworld.start-writing",
+        "command": "novel.start-writing",
         "title": "Write!"
       },
       {
-        "command": "helloworld.wordCount",
+        "command": "novel.wordCount",
         "title": "wordCount"
       }
 
@@ -72,7 +88,7 @@
       "editor/context": [
           {
               "when": "editorFocus",
-              "command": "helloworld.currentTime",
+              "command": "novel.currentTime",
               "group": "navigation"
           }
       ]
