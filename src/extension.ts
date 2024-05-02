@@ -18,8 +18,8 @@ function check_path(path:string):boolean{
 		   		vscode.window.showErrorMessage(`${path}创建失败!`);
 		   		return false;
 		 	}
-		 	console.log(`${path}创建成功!`);
 	   		}); 
+		console.log(`${path}创建成功!`);
 		//	创建文件，失败则返回false
 		return true;
 	}
@@ -29,6 +29,7 @@ function check_file(path:string, filename:string):boolean{
 	let fd=0;
 	if(fs.existsSync(path+filename)){
 		console.log(`${filename}已存在于${path+filename}`);
+		// #TODO 接下来负责写文件解码的部分，并且传输到对应的部分
 		return true;
 	} else {
 		console.log(`${filename}不存在，开始创建于${path+filename}`);
@@ -37,15 +38,15 @@ function check_file(path:string, filename:string):boolean{
 				console.error(err);
 				return false;
 			}
-		   console.log("文件创建成功！"); 
 		});
+		console.log("文件创建成功！"); 
 
 		fs.close(fd,function(err){
 			if (err){
 			   console.log(err);
 			} 
-			console.log("文件关闭成功");
 		 });
+		 console.log("文件关闭成功");
 		 return true;
 	}
 }
@@ -57,7 +58,7 @@ function check_structure() {
 	const scene = 'scene.md';
 
 	check_path(root_path+info_path);
-	check_file(root_path+info_path,character);
+	check_file(root_path+info_path,"asf");
 	check_file(root_path+info_path,plot);
 	check_file(root_path+info_path,other);
 	check_file(root_path+info_path,scene);

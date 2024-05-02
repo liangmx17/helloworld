@@ -52,14 +52,14 @@
     "viewsContainers": {
       "activitybar": [
         {
-          "id": "novel-character",
-          "title": "Character",
-          "icon": "resource/character.svg"
+          "id": "novel-structure",
+          "title": "Book",
+          "icon": "resource/book-solid.svg"
         }
       ]
     },
     "views": {
-      "novel-character": [
+      "novel-structure": [
         {
           "id": "novel-main-characters",
           "name": "Main Characters"
