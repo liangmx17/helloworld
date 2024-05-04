@@ -29,6 +29,7 @@ function check_file(path:string, filename:string):boolean{
 	let fd=0;
 	if(fs.existsSync(path+filename)){
 		console.log(`${filename}已存在于${path+filename}`);
+		
 		// #TODO 接下来负责写文件解码的部分，并且传输到对应的部分
 		return true;
 	} else {
